@@ -121,7 +121,7 @@ describe('Testing each comparator separately', () => {
     expect(res.original).toEqual(dateA);
     expect(res.current).toEqual(dateB);
 
-    dateB.setDate(dateA.getDate());
+    dateB.setTime(dateA.getTime());
 
     res = dateComparator(dateA, dateB);
 
