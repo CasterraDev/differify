@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "es6",
+    "declaration": false,  // We handle declarations in a separate step to avoid conflicts.
+    "outDir": "./dist/umd"
+  }
+}

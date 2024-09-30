@@ -2,17 +2,26 @@
   "name": "@netilon/differify",
   "version": "4.0.1",
   "description": "Differify allows you to get the diff between two entities (objects diff, arrays diff, date diff, functions diff, number diff, etc) very easily, quickly and in a friendly way.",
-  "main": "./index.js",
-  "types": "index.d.ts",
+  "main": "./dist/node/differify.js",
+  "types": "./dist/node/differify.d.ts",
+  "browser": "./dist/umd/differify.js",
+  "exports": {
+    ".": {
+      "import": "./dist/node/differify.js",
+      "require": "./dist/commonjs/differify.commonjs.js"
+    }
+  },
   "files": [
-    "index.js",
-    "index.d.ts"
+    "dist"
   ],
   "scripts": {
     "start": "NODE_ENV=production node index.js",
     "start:dev": "NODE_ENV=development nodemon index.js",
     "debug": "node --inspect-brk=9229 --nolazy ./test-dir/index.js",
-    "build": "rm -rf ./index.js && rm -rf ./index.d.ts && npx webpack && node ./bin/defaultExport.js",
+    "build:node": "tsc -p tsconfig.node.json",
+    "build:umd": "webpack --config webpack.config.js",
+    "build:decl": "tsc --emitDeclarationOnly --outDir ./dist/types",
+    "build": "rm -rf ./dist && npm run build:node && npm run build:umd",
     "prepare": "npm run test -- --coverage && npm run build",
     "lint": "eslint ./src",
     "test": "jest",
@@ -65,7 +74,7 @@
     "ts-jest": "^26.5.6",
     "ts-loader": "^8.3.0",
     "ts-node": "^9.1.1",
-    "typescript": "^4.3.2",
+    "typescript": "5.6",
     "typescript-declaration-webpack-plugin": "^0.2.2",
     "webpack": "^5.85.1",
     "webpack-cli": "^5.1.3",

@@ -1,0 +1,11 @@
+{
+  // Deal with all node settings
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "./dist/node"
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

@@ -280,3 +280,5 @@ class Differify {
 }
 
 export default Differify;
+
+export {DIFF_MODES, PROPERTY_STATUS, multiPropDiff, deepPropDiff, propDiff}

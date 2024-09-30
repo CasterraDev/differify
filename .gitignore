@@ -1,7 +1,9 @@
 .vscode
+.clang_format
 node_modules
 dist
 coverage
 index.js
 index.d.ts
+index.js.map
 test-dir
