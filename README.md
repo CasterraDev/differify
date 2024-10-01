@@ -32,9 +32,10 @@ Differify allows you to get the diff between two entities (objects diff, arrays 
 
 <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/netilon/differify/Differify CI"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/netilon/differify">
 
-![](badges/badge-functions.svg)
-![](badges/badge-lines.svg)
-![](badges/badge-statements.svg)
+![](badges/coverage-total.svg)
+![](badges/coverage-functions.svg)
+![](badges/coverage-lines.svg)
+![](badges/coverage-statements.svg)
 
 ## Your contribution is appreciated (thanks!)
 

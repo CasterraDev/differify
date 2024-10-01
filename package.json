@@ -26,7 +26,7 @@
     "lint": "eslint ./src",
     "test": "vitest run",
     "changelog": "git log --oneline  --pretty=format:'- [%ci] (%h) %s' -n 10 > CHANGELOG.md",
-    "coverage": "vitest run --coverage",
+    "coverage": "vitest run --coverage && generateBadges",
     "benchmark": "node ./test/differify.benchmark.js"
   },
   "pre-commit": [
@@ -76,5 +76,8 @@
     "webpack": "^5.85.1",
     "webpack-cli": "^5.1.3",
     "webpack-comment-remover-loader": "0.0.3"
+  },
+  "dependencies": {
+    "node-coverage-badges": "^1.1.1"
   }
 }
