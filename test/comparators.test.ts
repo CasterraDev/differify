@@ -9,13 +9,14 @@ import {
   valueRefEqualityComparator,
 } from '../src/comparators';
 import comparatorSelector from '../src/comparator-selector';
+import { expect, test } from 'vitest';
 
 let A = {};
 let B = {};
 
 const compSelector = comparatorSelector();
 
-beforeEach(() => {
+
   A = {
     name: 'Fabian',
     age: 18,
@@ -41,9 +42,7 @@ beforeEach(() => {
       { points: 9, desc: 'programming' },
     ],
   };
-});
 
-describe('Testing each comparator separately', () => {
   test('JSONStringComparator: should return JSON String comparison', () => {
     let res = JSONStringComparator(A, B);
 
@@ -344,4 +343,3 @@ describe('Testing each comparator separately', () => {
     expect(res._[1]._.desc.changes).toBe(1);
     expect(res._[1]._.desc.status).toBe('MODIFIED');
   });
-});
