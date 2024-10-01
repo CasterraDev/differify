@@ -59,7 +59,7 @@ export function toStringComparator(a, b): multiPropDiff {
 export function getConfiguredOrderedDeepArrayComparator(
   multipleComparator: comparator
 ): comparator {
-  function orderedDeepArrayComparator(aArr, bArr) {
+  function orderedDeepArrayComparator(aArr, bArr, keepKeys) {
     let maxArr;
     let minArr;
     let listALargerThanB = 0; // 0 equal \ -1 a major | 1 b major
@@ -77,7 +77,7 @@ export function getConfiguredOrderedDeepArrayComparator(
     let changes = 0;
     let i;
     for (i = 0; i < minArr.length; ++i) {
-      ret.push(multipleComparator(aArr[i], bArr[i]));
+      ret.push(multipleComparator(aArr[i], bArr[i], keepKeys));
       changes += ret[i].changes || 0;
     }
     if (listALargerThanB === -1) {
@@ -112,7 +112,7 @@ export function getConfiguredOrderedDeepArrayComparator(
 export function getConfiguredUnorderedDeepArrayComparator(
   multipleComparator: comparator
 ): comparator {
-  function deepUnorderedArrayComparator(aArr, bArr) {
+  function deepUnorderedArrayComparator(aArr, bArr, keepKeys = []) {
     let maxArr;
     if (aArr.length >= bArr.length) {
       maxArr = aArr;
@@ -138,7 +138,7 @@ export function getConfiguredUnorderedDeepArrayComparator(
         if (keyList !== undefined && keyList.length > 0) {
           currMapElement = keyList[keyList.length - 1];
           if (currMapElement.b !== null) {
-            comparatorRes = multipleComparator(currElement, currMapElement.b);
+            comparatorRes = multipleComparator(currElement, currMapElement.b, keepKeys);
 
             ret.push(comparatorRes);
             keyList.pop();
@@ -167,7 +167,7 @@ export function getConfiguredUnorderedDeepArrayComparator(
         if (keyList !== undefined && keyList.length > 0) {
           currMapElement = keyList[keyList.length - 1];
           if (currMapElement.a !== null) {
-            comparatorRes = multipleComparator(currMapElement.a, currElement);
+            comparatorRes = multipleComparator(currMapElement.a, currElement, keepKeys);
 
             ret.push(comparatorRes);
             keyList.pop();
@@ -204,7 +204,8 @@ export function getConfiguredUnorderedDeepArrayComparator(
           if (uncomparedPair.b.length > 0) {
             comparatorRes = multipleComparator(
               currMapElement.a,
-              uncomparedPair.b.pop()
+              uncomparedPair.b.pop(),
+              keepKeys
             );
 
             changes += comparatorRes.changes;
@@ -216,7 +217,8 @@ export function getConfiguredUnorderedDeepArrayComparator(
           if (uncomparedPair.a.length > 0) {
             comparatorRes = multipleComparator(
               uncomparedPair.a.pop(),
-              currMapElement.b
+              currMapElement.b,
+              keepKeys
             );
 
             changes += comparatorRes.changes;
@@ -252,32 +254,34 @@ export function getConfiguredUnorderedDeepArrayComparator(
 export function getConfiguredDeepObjectComparator(
   multipleComparator: comparator
 ): comparator {
-  function deepObjectComparator(a, b) {
+  function deepObjectComparator(a, b, keepKeys = []) {
     const ret = {};
     let aLength = 0;
     let bLength = 0;
     let changes = 0;
     for (const propA in a) {
-      if (has(a, propA)) {
+        if (keepKeys.includes(propA)){
+            ret[propA] = buildDiff(a[propA], b[propA], PROPERTY_STATUS.KEPT, 0);
+        }
         ++aLength;
         if (has(b, propA)) {
-          ret[propA] = multipleComparator(a[propA], b[propA]);
+          ret[propA] = multipleComparator(a[propA], b[propA], keepKeys);
         } else {
           ret[propA] = buildDiff(a[propA], null, PROPERTY_STATUS.DELETED, 1);
         }
         changes += ret[propA].changes;
-      }
     }
 
     for (const propB in b) {
-      if (has(b, propB)) {
+        if (keepKeys.includes(propB)){
+            ret[propB] = buildDiff(a[propB], b[propB], PROPERTY_STATUS.KEPT, 0);
+        }
         ++bLength;
         if (!has(a, propB)) {
           //TODO: avoid multiple indirections.
           ret[propB] = buildDiff(null, b[propB], PROPERTY_STATUS.ADDED, 1);
           changes += ret[propB].changes;
         }
-      }
     }
 
     return aLength === 0 && bLength === 0

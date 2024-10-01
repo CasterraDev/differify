@@ -7,8 +7,9 @@ type modeOptions = {
 };
 
 type config = {
-  mode ?: modeOptions 
+  mode ?: modeOptions; 
   compareArraysInOrder?: boolean;
+  keepKeys?: string[];
 };
 
 export default config;

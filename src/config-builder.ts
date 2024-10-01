@@ -1,5 +1,5 @@
 import DIFF_MODES from './enums/modes';
-import { isObject, isValidString } from './utils/validations';
+import { isArray, isObject, isValidString } from './utils/validations';
 import config from './types/config';
 export default function Configuration(config?: config) {
   this.compareArraysInOrder = true;
@@ -44,6 +44,10 @@ export default function Configuration(config?: config) {
           this.mode.function = comparison;
         }
       }
+    }
+
+    if (isArray(config.keepKeys)){
+        this.keepKeys = config.keepKeys;
     }
   }
 }

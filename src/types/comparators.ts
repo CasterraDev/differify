@@ -6,7 +6,7 @@ export type multipleComparatorSelector = (a: any, b: any) => multiPropDiff;
 export type deepComparatorSelector = (a: any, b: any) => multiPropDiff;
 export type configure = (config: config) => void;
 
-export type comparator = (a: any, b: any) => multiPropDiff;
+export type comparator = (a: any, b: any, keepKeys?: string[]) => multiPropDiff;
 
 export type comparatorTypes = {
   string: comparator | null;

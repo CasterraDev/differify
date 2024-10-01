@@ -18,7 +18,8 @@ const INVALID_VAL = Symbol('invalid');
 function diff(
   comparatorSelector: ComparatorMethods,
   a: any,
-  b: any
+  b: any,
+  keepKeys: string[] = []
 ): multiPropDiff {
   // here, we avoid comparing by reference because of the nested objects can be changed
   const aType = typeof a;
@@ -173,6 +174,7 @@ class Differify {
     return {
       compareArraysInOrder: this.config.compareArraysInOrder,
       mode: { ...this.config.mode },
+      keepKeys: this.config.keepKeys
     };
   };
 
@@ -182,8 +184,8 @@ class Differify {
    * @param b
    * @returns {multiPropDiff}
    */
-  compare = (a: any, b: any): multiPropDiff => {
-    return diff(this.compSelector, a, b);
+  compare = (a: any, b: any, keepKeys: string[] = this.config.keepKeys || []): multiPropDiff => {
+    return diff(this.compSelector, a, b, keepKeys);
   };
 
   /**
@@ -251,7 +253,7 @@ class Differify {
     diffResult: multiPropDiff,
     status: string = PROPERTY_STATUS.MODIFIED,
     extendedInformation: boolean = false
-  ) => {
+  ): Object | Array<any> => {
     const propStatus = getValidStatus(status);
     if (propStatus && diffResult) {
       if (diffResult._) {

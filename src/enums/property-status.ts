@@ -7,6 +7,7 @@ enum PROPERTY_STATUS {
   DELETED = 'DELETED',
   MODIFIED = 'MODIFIED',
   EQUAL = 'EQUAL',
+  KEPT = 'KEPT'
 };
 
 export default PROPERTY_STATUS;
