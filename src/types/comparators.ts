@@ -2,8 +2,8 @@ import { multiPropDiff } from './diff';
 import config from './config';
 
 export type propertySelector = (prop : multiPropDiff) => any;
-export type multipleComparatorSelector = (a: any, b: any) => multiPropDiff;
-export type deepComparatorSelector = (a: any, b: any) => multiPropDiff;
+export type multipleComparatorSelector = (a: any, b: any, keepKeys?: string[]) => multiPropDiff;
+export type deepComparatorSelector = (a: any, b: any, keepKeys?: string[]) => multiPropDiff;
 export type configure = (config: config) => void;
 
 export type comparator = (a: any, b: any, keepKeys?: string[]) => multiPropDiff;

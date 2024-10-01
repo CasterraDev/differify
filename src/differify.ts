@@ -29,7 +29,7 @@ function diff(
     return buildDiff(a, b, PROPERTY_STATUS.MODIFIED, 1);
   }
   const comparator = comparatorSelector.getComparatorByType(aType);
-  return comparator ? comparator(a, b) : valueRefEqualityComparator(a, b);
+  return comparator ? comparator(a, b, keepKeys) : valueRefEqualityComparator(a, b);
 }
 
 /**

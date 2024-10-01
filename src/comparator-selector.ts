@@ -37,7 +37,7 @@ export default function comparatorSelector(): ComparatorMethods {
   const deepTypeMap = {};
 
   //comparator selectors
-  function multipleComparatorSelector(a, b): multiPropDiff {
+  function multipleComparatorSelector(a, b, keepKeys = []): multiPropDiff {
     if (a === b) {
       return buildDiff(a, b, PROPERTY_STATUS.EQUAL);
     }
@@ -49,17 +49,17 @@ export default function comparatorSelector(): ComparatorMethods {
       return buildDiff(a, b, PROPERTY_STATUS.MODIFIED, 1);
     }
     const comparator = typeMap[aType];
-    return comparator ? comparator(a, b) : valueRefEqualityComparator(a, b);
+    return comparator ? comparator(a, b, keepKeys) : valueRefEqualityComparator(a, b);
   }
 
-  function deepComparatorSelector(a, b): multiPropDiff {
+  function deepComparatorSelector(a, b, keepKeys = []): multiPropDiff {
     // checks array => date => object
     const aType = Object.prototype.toString.call(a);
     const bType = Object.prototype.toString.call(b);
 
     if (aType === bType) {
       const comparator = deepTypeMap[aType];
-      return comparator ? comparator(a, b) : valueRefEqualityComparator(a, b);
+      return comparator ? comparator(a, b, keepKeys) : valueRefEqualityComparator(a, b);
     }
 
     return buildDiff(a, b, PROPERTY_STATUS.MODIFIED, 1);
