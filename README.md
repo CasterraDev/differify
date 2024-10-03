@@ -2,7 +2,7 @@
 
 ## One of the Fastest **deep** object/array diff
 
-- Benchmarks with other popular packages on the same category:
+- Benchmarks with other popular packages on the same category: (This benchmark is using the original repo [Here]("https://github.com/netilon/differify"))
   @netilon/differify x 1,045,377 ops/sec ±1.42% (93 runs sampled)
 
       deep-object-diff x 184,838 ops/sec ±2.55% (85 runs sampled)
@@ -10,6 +10,15 @@
       recursive-diff x 108,276 ops/sec ±1.93% (94 runs sampled)
 
       Fastest is @netilon/differify
+
+## What this fork adds?
+
+- KeepKeys - Allows you to keep certain keys in the returned object. Useful for database objects to keep the unique IDs, usernames, or emails to use in a find request then use the rest of the object for the update request.
+- isObjectValueEmpty - Tells you if the object is empty skipping over keepKeys.
+- Migrated from jest to vitest - Jest had a lot of config and ran slower. Vitest is faster & is a more streamlined, out-of-the-box testing package.
+- Fixed Typescript signature issues - When this was forked the original had issues with typescript class signatures and some type exports.
+
+This fork was made to easily keep certain keys in an object AND get the differences/additions/deletions for use in updating databases using those kept keys. If you need a pure JS object difference tool. Check out the original repo [Here]("https://github.com/netilon/differify")
 
 ## Whats new?
 
@@ -39,6 +48,8 @@ Differify allows you to get the diff between two entities (objects diff, arrays 
 
 ## Your contribution is appreciated (thanks!)
 
+Donate to the original author here! Check out the original repo [Here]("https://github.com/netilon/differify")
+
 [![alt text](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif 'thanks for contribute!')](https://paypal.me/netilon)
 
 ---
@@ -56,7 +67,7 @@ Differify allows you to get the diff between two entities (objects diff, arrays 
 
 ## Installation<a name="id1"></a>
 
-npm install @netilon/differify
+npm install @casterra/differify
 
 ## How to use it<a name="id2"></a>
 
@@ -64,23 +75,124 @@ Comparing things with differify is **very simple**!
 
 ### **> Compare objects**
 
-![](assets/how-to-use-differify-object-example.png)
+```
+const Differify = require('@casterradev/differify')
+
+const differify = new Differify({mode: {object: 'DIFF', array: 'DIFF'}});
+
+const A = {
+    id: 1,
+    role: 'developer',
+    name: 'Person1',
+    birthdate: 440305200000
+}
+
+const B = {
+    id: 2,
+    role: 'developer',
+    name: 'Person2',
+    birthdate: 533444400000
+}
+
+const diff = differify.compare(A,B);
+```
 
 ### **> Object diff output**
 
-![](assets/differify-object-output.png)
+```
+{
+    "_": {
+        "id": {
+            "original": 1,
+            "current" 2,
+            "status": "MODIFED",
+            "changes": 1
+        },
+        "role": {
+            "original": "developer",
+            "current" "developer",
+            "status": "EQUAL",
+            "changes": 0
+        },
+        "name": {
+            "original": "Person1",
+            "current" "Person2",
+            "status": "MODIFIED",
+            "changes": 1
+        },
+        "birthdate": {
+            "original": 440305200000,
+            "current" 533444400000,
+            "status": "MODIFIED",
+            "changes": 1
+        },
+    },
+    "status": "MODIFIED",
+    "changes": 3
+}
+```
 
 ### **> Easy access and use**
 
-![](assets/basic-use.png)
+```
+const diff = differify.compare(A,B);
+
+console.log(
+    `Property name
+     status is: ${diff._.name.status}
+     prev value is: ${diff._.name.original}
+     current value is: ${diff._.name.current}
+
+// OUTPUT:
+// Property name
+// status is: MODIFIED
+// prev value is: Person1
+// current value is: Person2
+```
 
 ### **> Compare arrays**
 
-![](assets/how-to-use-differify-array-example.png)
+```
+const Differify = require('@casterradev/differify');
 
-### **> Array diff output**
+const differify = new Differify({mode: {object: 'DIFF', array: 'DIFF'}});
 
-![](assets/differify-array-output.png)
+const A = [1, 2, 3];
+const B = [1, 2, 4, 5];
+
+const diff = differify.compare(A, B);
+
+// OUTPUT
+{
+    "_": [
+        {
+            "original": 1,
+            "current": 1,
+            "status": "EQUAL",
+            "changes": 0
+        },
+        {
+            "original": 2,
+            "current": 2,
+            "status": "EQUAL",
+            "changes": 0
+        },
+        {
+            "original": 3,
+            "current": 4,
+            "status": "MODIFIED",
+            "changes": 1
+        },
+        {
+            "original": null,
+            "current": 5,
+            "status": "ADDED",
+            "changes": 1
+        },
+    ],
+    "status": "MODIFIED",
+    "changes": 2
+```
 
 ### **Simple Structure**
 
@@ -88,24 +200,99 @@ As you can see, there are two different kinds of structures that you can get fro
 
 1. For objects and arrays **only**, you will get this structure:
 
-   ![](assets/basic-structure-for-objects-arrays.png)
+   ```
+        {
+            "_": ...,
+            "status": "MODIFIED",
+            "changes": 3
+        }
+   ```
 
-   - the `_` property contains the detailed diff information (it's an underscore to improve the readability in complex nested objects property accesses)
-   - the `status` property contains the global status of the comparison ('EQUAL', 'MODIFIED', 'DELETED', 'ADDED')
-   - the `changes` property is the total changes found when the comparison was performed.
+   - The `_` property contains the detailed diff information (it's an underscore to improve the readability in complex nested objects property accesses)
+   - The `status` property contains the global status of the comparison ('EQUAL', 'MODIFIED', 'DELETED', 'ADDED')
+   - The `changes` property is the total changes found when the comparison was performed.
 
 2. For anything that `Object.prototype.toString.call()` does NOT return `[object Array]` or `[object Object]` (functions, dates, numbers, etc), you will get this structure:
 
-   ![](assets/basic-structure-for-values.png)
+   ```
+        {
+            "original": 1,
+            "current": 2,
+            "status": "MODIFIED",
+            "changes": 1
+        }
+   ```
 
-   - the `original` property has the **original** value (left parameter in `compare` method).
-   - the `current` property has the **current** value (right parameter in `compare` method).
-   - the `status` property contains the current status of the comparison ('EQUAL', 'MODIFIED', 'DELETED', 'ADDED')
-   - the `changes` property will be 1 or 0 depending if there was a change or not.
+   - The `original` property has the **original** value (left parameter in `compare` method).
+   - The `current` property has the **current** value (right parameter in `compare` method).
+   - The `status` property contains the current status of the comparison ('EQUAL', 'MODIFIED', 'DELETED', 'ADDED')
+   - The `changes` property will be 1 or 0 depending if there was a change or not.
 
 ### **> Apply changes**
 
 ![](assets/apply-changes.png)
+```
+const differify = new Differify({mode: { object: 'DIFF', array: 'DIFF' }});
+
+const A = {
+    id: 1,
+    role: ['developer', 'admin'],
+    name: 'Person1',
+    color: 'red',
+    birthdate: 440305200000
+    another: 'property from A'
+}
+
+const B = {
+    id: 2,
+    role: ['developer'],
+    name: 'Person2',
+    color: 'red',
+    birthdate: 533444400000
+}
+
+const diff = differify.compare(A, B);
+console.log(differify.applyRightChanges(diff));
+
+/* OUTPUT:
+{
+    id: 2,
+    role: ['developer', 'admin'],
+    name: 'Person2',
+    color: 'red',
+    birthdate: 533444400000
+    another: 'property from A'
+}
+*/
+
+console.log(differify.applyLeftChanges(diff));
+
+/* OUTPUT:
+{
+    id: 1,
+    role: ['developer', 'admin'],
+    name: 'Person1',
+    color: 'red',
+    birthdate: 440305200000
+    another: 'property from A'
+}
+*/
+
+console.log(differify.applyLeftChanges(diff, true));
+
+/*
+JUST the diff (note that there is NO color property and NO 'developer' role, because both properties has the same value in both entities.
+
+OUTPUT:
+{
+    id: 1,
+    role: ['admin'],
+    name: 'Person1',
+    birthdate: 440305200000
+    another: 'property from A'
+}
+*/
+```
 
 # Documentation<a name="id3"></a>
 
@@ -137,13 +324,15 @@ _getConfig();_
 
 **Method:**
 
-_compare(*any*, *any*);_
+_compare(*any*, *any*, keepKeys);_
 
 **Description:** It returns the difference between two entities.
 
 **Params:**
 
 Both parameters indicate the entities to be compared.
+
+_keepKeys_?: string[] - Array of keep keys. Return object will mark these keys with status of 'KEPT'. If not given uses config.keepKeys. if config.keepKeys is not set uses empty array [].
 
 **Return:** Object.
 
@@ -199,20 +388,37 @@ _extendedInformation_: boolean - if true, it will add more detail about the elem
 
 ---
 
+**Method:**
+
+_isObjectValuesEmpty(obj, keepKeys);_
+
+**Description:** Tells if an object is empty not counting keepKeys keys.
+
+**Params:**
+
+_obj_: Object - Object to see if it's empty.
+
+_keepKeys_: string[] - Array of keep keys. If not given uses config.keepKeys. if config.keepKeys is not set uses empty array [].
+
+**Return:** boolean - Returns true if empty. False if not empty.
+
+---
+
 ## Configuration<a name="id4"></a>
 
 You can pass a config to the setConfig() method to change the behavior and adjust it to fit your needs. If you prefer, you can set it once and use it everywhere or you can change it when you need it.
 
-| key                    | value   | default   | description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| ---------------------- | ------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| _mode.array_           | string  | DIFF      | **DIFF**: it will iterate over each element in the array A, and will compare each element against the element in the same index in the array B.<br><br>**REFERENCE**: just compare the references of each array.<br><br>**STRING**: only will check the array length and will do a toString comparison if necessary.                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| _mode.object_          | string  | DIFF      | **DIFF**: it will iterate over each property in the object A and will compare each value with the same property value in the object B.<br><br>**REFERENCE**: just compare the references of each object.<br><br>**STRING**: only do a toString comparison.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| _mode.function_        | string  | REFERENCE | **REFERENCE**: just compare the references of each function.<br><br>**STRING**: only do a toString comparison (useful to compare the function bodies).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| _compareArraysInOrder_ | boolean | true      | if it is `true`, it will compare each element in both arrays one by one in an ordered way, assuming that each element, in the same index in both arrays, should be the same element that can have changes or not ([see an example of this case](#id6)). If the option is set to `false`, then it will compare each element in both arrays and it will check if they are `EQUAL`, `ADDED` or `DELETED` without keeping in mind the appearence order (there won't be details about the `MODIFIED` status, it's only available if the option is set to true, since in that case, the order matters and we know that each element in the same index (but in different arrays), should be the same element that could have been changed or not) ([see an example of this case](#id7)). |
+| key                    | value    | default   | description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ---------------------- | -------  | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _mode.array_           | string   | DIFF      | **DIFF**: it will iterate over each element in the array A, and will compare each element against the element in the same index in the array B.<br><br>**REFERENCE**: just compare the references of each array.<br><br>**STRING**: only will check the array length and will do a toString comparison if necessary.                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| _mode.object_          | string   | DIFF      | **DIFF**: it will iterate over each property in the object A and will compare each value with the same property value in the object B.<br><br>**REFERENCE**: just compare the references of each object.<br><br>**STRING**: only do a toString comparison.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| _mode.function_        | string   | REFERENCE | **REFERENCE**: just compare the references of each function.<br><br>**STRING**: only do a toString comparison (useful to compare the function bodies).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| _compareArraysInOrder_ | boolean  | true      | if it is `true`, it will compare each element in both arrays one by one in an ordered way, assuming that each element, in the same index in both arrays, should be the same element that can have changes or not ([see an example of this case](#id6)). If the option is set to `false`, then it will compare each element in both arrays and it will check if they are `EQUAL`, `ADDED` or `DELETED` without keeping in mind the appearence order (there won't be details about the `MODIFIED` status, it's only available if the option is set to true, since in that case, the order matters and we know that each element in the same index (but in different arrays), should be the same element that could have been changed or not) ([see an example of this case](#id7)). |
+| _keepKeys_             | string[] | []        | Array of keys to keep. Useful for keeping database IDs. The `differify.compare` function also has a keepKeys parameter that will overwrite this setting.|
 
 **Configuration example:**
 
-    const Differify = require('@netilon/differify');
+    const Differify = require('@casterradev/differify');
 
     differify = new Differify({ mode: { object: 'DIFF', array: 'DIFF' } });
 
@@ -222,9 +428,12 @@ if you dont specify any configuration, the default options are the following:
 
     {
         mode: {
-        array: 'DIFF',
-        object: 'DIFF',
-        function: 'REFERENCE',
+            array: 'DIFF',
+            object: 'DIFF',
+            function: 'REFERENCE',
+        },
+        compareArraysInOrder: true,
+        keepKeys: []
     }
 
 ## Typescript<a name="id5"></a>
@@ -242,7 +451,7 @@ tsconfig.json
 
 then in your .ts file, you can import Differify this way:
 
-    import Differify, { DIFF_MODES } from '@netilon/differify';
+    import Differify, { DIFF_MODES } from '@casterradev/differify';
 
     // See the examples section.
 
@@ -371,5 +580,7 @@ you will get this output (just a string comparison):
     */
 
 ## Your contribution is appreciated (thanks!)
+
+Donate to the original author here! Check out the original repo [Here]("https://github.com/netilon/differify")
 
 [![alt text](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif 'thanks for contribute!')](https://paypal.me/netilon)
