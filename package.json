@@ -1,6 +1,6 @@
 {
   "name": "@casterradev/differify",
-  "version": "4.1.1",
+  "version": "1.0.1",
   "description": "Differify allows you to get the diff between two entities (objects diff, arrays diff, date diff, functions diff, number diff, etc) very easily, quickly and in a friendly way. This fork adds the KeepKeys parameter allowing you to easily keep certain keys in the returned object (like Database IDs).",
   "main": "./dist/node/differify.js",
   "types": "./dist/node/differify.d.ts",
