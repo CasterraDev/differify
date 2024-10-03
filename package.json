@@ -76,9 +76,7 @@
     "vitest": "^2.1.1",
     "webpack": "^5.85.1",
     "webpack-cli": "^5.1.3",
-    "webpack-comment-remover-loader": "0.0.3"
-  },
-  "dependencies": {
+    "webpack-comment-remover-loader": "0.0.3",
     "node-coverage-badges": "^1.1.1",
     "ts-loader": "^9.5.1"
   }
