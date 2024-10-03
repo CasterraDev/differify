@@ -1,7 +1,7 @@
 {
-  "name": "@netilon/differify",
-  "version": "4.0.1",
-  "description": "Differify allows you to get the diff between two entities (objects diff, arrays diff, date diff, functions diff, number diff, etc) very easily, quickly and in a friendly way.",
+  "name": "@casterradev/differify",
+  "version": "4.1.1",
+  "description": "Differify allows you to get the diff between two entities (objects diff, arrays diff, date diff, functions diff, number diff, etc) very easily, quickly and in a friendly way. This fork adds the KeepKeys parameter allowing you to easily keep certain keys in the returned object (like Database IDs).",
   "main": "./dist/node/differify.js",
   "types": "./dist/node/differify.d.ts",
   "browser": "./dist/umd/differify.js",
@@ -48,10 +48,11 @@
     "browser",
     "netilon"
   ],
-  "author": "Fabian Roberto Orue <fabianorue@gmail.com> (https://www.netilon.com)",
+  "original-author": "Fabian Roberto Orue <fabianorue@gmail.com> (https://www.netilon.com)",
+  "fork-author": "CasterraDev <casterradev@gmail.com> (casterradev.net)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/netilon/differify"
+    "url": "https://github.com/casterradev/differify"
   },
   "bugs": {
     "url": "https://github.com/netilon/differify/issues",
