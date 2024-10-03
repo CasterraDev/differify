@@ -279,6 +279,24 @@ class Differify {
     }
     return null;
   };
+
+  /**
+   * Tells if an object is empty not counting keepKeys keys.
+   * @param {Object} obj | Object to see if it's empty.
+   * @param {string[]} keepKeys | Array of keep keys. If not given uses config.keepKeys. if config.keepKeys is not set uses empty array []
+   * @returns {boolean} | Returns true if empty. False if not empty.
+   */
+  isObjectValuesEmpty = (
+      obj: Object,
+      keepKeys: string[] = this.config.keepKeys || []
+  ): boolean => {
+    for (let prop in obj) {
+        if (obj.hasOwnProperty(prop) && !keepKeys.includes(prop)) {
+            return false;
+        }
+    }
+    return true;
+  }
 }
 
 export default Differify;

@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import Differify, { DIFF_MODES } from "../src/differify.ts"
+import Differify, { DIFF_MODES } from "../src/differify"
 
 let A = {};
 let B = {};
@@ -230,4 +230,29 @@ test('KeepKeys: Compare multi keys', () => {
 
     const diff = differify.compare(A, B, ['id', 'roles']);
     expect(diff).toStrictEqual(ResMultiKey);
+})
+
+let ResFilter = {
+    name: 'Judith',
+    nested: {
+        id: 2,
+    },
+    hobbies: [
+        {
+            desc: 'dance'
+        }
+    ]
+}
+
+test('KeepKeys: filter', () => {
+    let differify = new Differify({
+        mode: {
+            object: DIFF_MODES.DIFF, array: DIFF_MODES.DIFF
+        },
+    });
+
+    let diff = differify.compare(A, B, ['id']);
+    expect(diff).toStrictEqual(ResIdKey);
+    const filter = { ...differify.filterDiffByStatus(diff, "MODIFIED"), ...differify.filterDiffByStatus(diff, "KEPT") };
+    expect(filter).toStrictEqual(ResFilter);
 })

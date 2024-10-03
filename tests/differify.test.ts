@@ -1574,3 +1574,34 @@ test('Testing Unordered array comparison', () => {
         '{"_":{"members":{"_":[{"_":{"memberIds":{"_":[{"original":"a","current":"a","status":"EQUAL","changes":0},{"original":"b","current":"b","status":"EQUAL","changes":0},{"original":null,"current":"z","status":"ADDED","changes":1}],"status":"MODIFIED","changes":1},"originalMemberId":{"original":"1","current":"1","status":"EQUAL","changes":0},"type":{"original":"COUNTRYCLUB","current":"COUNTRYCLUB","status":"EQUAL","changes":0}},"status":"MODIFIED","changes":1}],"status":"MODIFIED","changes":1}},"status":"MODIFIED","changes":1}'
     );
 });
+
+//===IsObjectValuesEmpty===
+
+const emptyObj = {}
+const filledObj = {name: 'John'}
+const emptyKeepKeysObj = {id: 22}
+const filledKeepKeysObj = {id: 44, name: 'James'}
+
+test('IsObjectValuesEmpty: Empty Object', () => {
+    const res = differify.isObjectValuesEmpty(emptyObj);
+    expect(res).toBe(true);
+})
+
+test('IsObjectValuesEmpty: Filled Object', () => {
+    const res = differify.isObjectValuesEmpty(filledObj);
+    expect(res).toBe(false);
+})
+
+test('IsObjectValuesEmpty: Empty Keep Keys Object', () => {
+    differify.setConfig({keepKeys: ['id']})
+    const res = differify.isObjectValuesEmpty(emptyKeepKeysObj);
+    expect(res).toBe(true);
+    differify.setConfig({})
+})
+
+test('IsObjectValuesEmpty: Filled Keep Keys Object', () => {
+    differify.setConfig({keepKeys: ['id']})
+    const res = differify.isObjectValuesEmpty(filledKeepKeysObj);
+    expect(res).toBe(false);
+    differify.setConfig({})
+})
