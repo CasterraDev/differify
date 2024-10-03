@@ -2,7 +2,8 @@
 
 ## One of the Fastest **deep** object/array diff
 
-- Benchmarks with other popular packages on the same category: (This benchmark is using the original repo [Here]("https://github.com/netilon/differify"))
+- Benchmarks with other popular packages on the same category: (This benchmark is using the original repo [Here]("github.com/netilon/differify"))
+
   @netilon/differify x 1,045,377 ops/sec ±1.42% (93 runs sampled)
 
       deep-object-diff x 184,838 ops/sec ±2.55% (85 runs sampled)
@@ -14,11 +15,11 @@
 ## What this fork adds?
 
 - KeepKeys - Allows you to keep certain keys in the returned object. Useful for database objects to keep the unique IDs, usernames, or emails to use in a find request then use the rest of the object for the update request.
-- isObjectValueEmpty - Tells you if the object is empty skipping over keepKeys.
+- isObjectValueEmpty(obj, keepKeys) - Tells you if the object is empty skipping over keepKeys.
 - Migrated from jest to vitest - Jest had a lot of config and ran slower. Vitest is faster & is a more streamlined, out-of-the-box testing package.
 - Fixed Typescript signature issues - When this was forked the original had issues with typescript class signatures and some type exports.
 
-This fork was made to easily keep certain keys in an object AND get the differences/additions/deletions for use in updating databases using those kept keys. If you need a pure JS object difference tool. Check out the original repo [Here]("https://github.com/netilon/differify")
+This fork was made to easily keep certain keys in an object AND get the differences/additions/deletions for use in updating databases using those kept keys. If you need a pure JS object difference tool. Check out the original repo [Here]("github.com/netilon/differify")
 
 ## Whats new?
 
@@ -48,7 +49,7 @@ Differify allows you to get the diff between two entities (objects diff, arrays 
 
 ## Your contribution is appreciated (thanks!)
 
-Donate to the original author here! Check out the original repo [Here]("https://github.com/netilon/differify")
+Donate to the original author here! Check out the original repo [Here]("github.com/netilon/differify")
 
 [![alt text](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif 'thanks for contribute!')](https://paypal.me/netilon)
 
@@ -67,7 +68,7 @@ Donate to the original author here! Check out the original repo [Here]("https://
 
 ## Installation<a name="id1"></a>
 
-npm install @casterra/differify
+npm install @casterradev/differify
 
 ## How to use it<a name="id2"></a>
 
@@ -230,7 +231,6 @@ As you can see, there are two different kinds of structures that you can get fro
 
 ### **> Apply changes**
 
-![](assets/apply-changes.png)
 ```
 const differify = new Differify({mode: { object: 'DIFF', array: 'DIFF' }});
 
@@ -380,7 +380,7 @@ _filterDiffByStatus(diffResult, status, extendedInformation);_
 
 _diffResult_: Object - It is the Object returned by the `compare()` method call.
 
-_status_: string - one of the following (`ADDED` || `MODIFIED` || `DELETED` || `EQUAL`).
+_status_: string - one of the following (`ADDED` || `MODIFIED` || `DELETED` || `EQUAL` || `KEPT`).
 
 _extendedInformation_: boolean - if true, it will add more detail about the elements to the given output. Defaults to false.
 
@@ -390,7 +390,7 @@ _extendedInformation_: boolean - if true, it will add more detail about the elem
 
 **Method:**
 
-_isObjectValuesEmpty(obj, keepKeys);_
+_isObjectValuesEmpty(obj, keepKeys?);_
 
 **Description:** Tells if an object is empty not counting keepKeys keys.
 
@@ -398,7 +398,7 @@ _isObjectValuesEmpty(obj, keepKeys);_
 
 _obj_: Object - Object to see if it's empty.
 
-_keepKeys_: string[] - Array of keep keys. If not given uses config.keepKeys. if config.keepKeys is not set uses empty array [].
+_keepKeys_?: string[] - Array of keep keys. If not given uses config.keepKeys. if config.keepKeys is not set uses empty array [].
 
 **Return:** boolean - Returns true if empty. False if not empty.
 
@@ -581,6 +581,6 @@ you will get this output (just a string comparison):
 
 ## Your contribution is appreciated (thanks!)
 
-Donate to the original author here! Check out the original repo [Here]("https://github.com/netilon/differify")
+Donate to the original author here! Check out the original repo [Here]("github.com/netilon/differify")
 
 [![alt text](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif 'thanks for contribute!')](https://paypal.me/netilon)
